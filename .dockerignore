@@ -1,0 +1,12 @@
+# Keep the image small: never copy the raw data or caches into the build
+data-set/
+cache/
+docs/
+notebooks/
+scripts/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.git/
+.venv/
+*.parquet

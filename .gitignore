@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Generated at runtime
+cache/
+*.parquet
+artifacts/*
+!artifacts/.gitkeep
+
+# Raw competition data (too large to track; download from Kaggle)
+data-set/*.csv
