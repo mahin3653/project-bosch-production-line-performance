@@ -6,25 +6,25 @@ Predict whether a manufactured part fails end-of-line quality control
 Binary classification under **extreme class imbalance** (failures are <1% of parts),
 so the headline metric is **MCC** alongside ROC-AUC and F1.
 
-Everything lives in a single file, **`bosch.py`**, driven by flags:
+Everything lives in a single file, **`rafel.py`**, driven by flags:
 
-| Phase | Deliverable | Command |
-|-------|-------------|---------|
-| I — Preprocessing / FE / Selection | memory reduction, feature engineering, selection | `python bosch.py train` |
-| II — Model training | LogReg, RandomForest, XGBoost, LightGBM; threshold-tuned for MCC | `python bosch.py train` |
-| III — Deployment | FastAPI service + Docker image | `uvicorn bosch:app` / `Dockerfile` |
+| Phase                              | Deliverable                                                      | Command                            |
+| ---------------------------------- | ---------------------------------------------------------------- | ---------------------------------- |
+| I — Preprocessing / FE / Selection | memory reduction, feature engineering, selection                 | `python rafel.py train`            |
+| II — Model training                | LogReg, RandomForest, XGBoost, LightGBM; threshold-tuned for MCC | `python rafel.py train`            |
+| III — Deployment                   | FastAPI service + Docker image                                   | `uvicorn bosch:app` / `Dockerfile` |
 
 ## Project layout
 
 ```
-bosch.py         config + data loading + feature engineering + training + FastAPI app
+rafel.py         config + data loading + feature engineering + training + FastAPI app
 data-set/        raw competition CSVs (train_* labelled; test_* untouched)
 docs/            project brief PDFs
 artifacts/       model.pkl, feature_list.json, raw_columns.json, threshold.json (produced by training)
 Dockerfile  requirements.txt  requirements-serve.txt
 ```
 
-`bosch.py` defines `build_features(...)` once and both training and the API call
+`rafel.py` defines `build_features(...)` once and both training and the API call
 it, so a part scored in production goes through the identical pipeline used at
 training (train/serve parity).
 
@@ -33,9 +33,9 @@ training (train/serve parity).
 ```bash
 pip install -r requirements.txt
 
-python bosch.py train                                      # full run (cloud-sized defaults)
-python bosch.py train --sample-frac 0.1 --no-categorical   # low-RAM / local machine
-python bosch.py train --sample-frac 0.05 --no-categorical --models lgbm   # quick check
+python rafel.py train                                      # full run (cloud-sized defaults)
+python rafel.py train --sample-frac 0.1 --no-categorical   # low-RAM / local machine
+python rafel.py train --sample-frac 0.05 --no-categorical --models lgbm   # quick check
 ```
 
 It auto-detects the data directory (`/kaggle/input/bosch-production-line-performance`
@@ -46,7 +46,7 @@ deployment artifacts into `artifacts/`.
 Flags: `--sample-frac` (fraction of passing parts; all failures always kept),
 `--include-categorical/--no-categorical` (the categorical block is the memory
 hog — skip it on a small machine), `--top-k`, `--test-size`, `--models`
-(`logreg rf xgb lgbm`), `--no-cache`. Run `python bosch.py train --help` for details.
+(`logreg rf xgb lgbm`), `--no-cache`. Run `python rafel.py train --help` for details.
 
 > **Local machines:** the categorical block (~2140 columns) dominates memory; use
 > `--no-categorical` and a small `--sample-frac` (e.g. `0.1`). The first run scans
@@ -64,7 +64,7 @@ After training has produced `artifacts/`:
 
 ```bash
 pip install -r requirements-serve.txt
-python bosch.py serve            # or: uvicorn bosch:app --reload
+python rafel.py serve            # or: uvicorn bosch:app --reload
 # -> http://localhost:8000/docs
 ```
 
@@ -91,5 +91,5 @@ docker login
 docker push <dockerhub-user>/bosch-pl-api:latest
 ```
 
-The image bundles `bosch.py` and `artifacts/` (raw data and caches are excluded
+The image bundles `rafel.py` and `artifacts/` (raw data and caches are excluded
 via `.dockerignore`) and installs only the serving dependencies.

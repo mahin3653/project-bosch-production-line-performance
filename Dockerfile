@@ -16,7 +16,7 @@ COPY requirements-serve.txt ./
 RUN pip install -r requirements-serve.txt
 
 # Single-file application (config + features + serving) and trained artifacts
-COPY bosch.py ./
+COPY rafel.py ./
 COPY artifacts/ ./artifacts/
 
 EXPOSE 8000

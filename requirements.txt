@@ -1,4 +1,4 @@
-# Full stack for `python bosch.py train` (Phases I+II) and serving (Phase III).
+# Full stack for `python rafel.py train` (Phases I+II) and serving (Phase III).
 # Core data / ML
 pandas>=2.0
 numpy>=1.24

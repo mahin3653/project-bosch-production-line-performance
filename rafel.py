@@ -12,12 +12,12 @@ pipeline used at training.
 Usage
 -----
     # Phase I + II — train and write artifacts/
-    python bosch.py train                                   # cloud-sized defaults
-    python bosch.py train --sample-frac 0.1 --no-categorical   # low-RAM / local
-    python bosch.py train --sample-frac 0.05 --no-categorical --models lgbm
+    python rafel.py train                                   # cloud-sized defaults
+    python rafel.py train --sample-frac 0.1 --no-categorical   # low-RAM / local
+    python rafel.py train --sample-frac 0.05 --no-categorical --models lgbm
 
     # Phase III — serve predictions
-    python bosch.py serve                  # or: uvicorn bosch:app
+    python rafel.py serve                  # or: uvicorn bosch:app
     #   GET  /health
     #   POST /predict  {"id": 1, "features": {"L0_S0_F0": 0.03, ...}}
 
